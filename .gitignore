@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
 uploads/
+*.log
 data/cattle_disease_model.h5
 data/cattle_images/
