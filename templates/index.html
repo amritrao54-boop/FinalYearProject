@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CattleHealth – AI-Powered Disease Detection</title>
+  <meta name="description" content="Predict cattle diseases using AI and machine learning. Symptom-based and image-based detection for farmers and veterinary professionals." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, #0f1923 0%, #1a2e44 60%, #0f2b1f 100%);
+      min-height: 100vh;
+      color: #e8f0f7;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      margin: 0;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: rgba(10, 20, 30, 0.85) !important;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+    .navbar-brand {
+      font-weight: 900;
+      font-size: 1.6rem;
+      color: #f4a261 !important;
+      letter-spacing: 1px;
+    }
+    .nav-link {
+      color: #c9d9e8 !important;
+      font-weight: 600;
+      transition: color 0.25s;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: #f4a261 !important;
+    }
+
+    /* ── Glass cards ── */
+    .glass-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.35);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 1rem 3rem;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(244,162,97,0.15);
+      color: #f4a261;
+      border: 1px solid rgba(244,162,97,0.35);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, #f4a261, #e9c46a, #2a9d8f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+    .hero p {
+      color: #8fadc8;
+      font-size: 1.1rem;
+      max-width: 620px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-hero {
+      border-radius: 50px;
+      padding: 0.85rem 2.2rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+    }
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #f4a261, #e76f51);
+      border: none;
+      color: #fff;
+    }
+    .btn-hero-primary:hover {
+      box-shadow: 0 0 24px rgba(244,162,97,0.6);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+    .btn-hero-outline {
+      background: transparent;
+      border: 2px solid rgba(42,157,143,0.5);
+      color: #2a9d8f;
+    }
+    .btn-hero-outline:hover {
+      background: rgba(42,157,143,0.1);
+      border-color: #2a9d8f;
+      color: #2a9d8f;
+      transform: translateY(-2px);
+    }
+
+    /* ── Section headings ── */
+    section {
+      padding: 3.5rem 0;
+    }
+    .section-label {
+      display: inline-block;
+      background: rgba(42,157,143,0.15);
+      color: #2a9d8f;
+      border: 1px solid rgba(42,157,143,0.3);
+      border-radius: 50px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #e8f0f7;
+      margin-bottom: 0.5rem;
+    }
+    .section-sub {
+      color: #7a9bb8;
+      font-size: 0.95rem;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── Prediction form ── */
+    .form-card {
+      padding: 2.5rem;
+    }
+    .symptom-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.6rem;
+    }
+    .symptom-check {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .symptom-check:hover {
+      background: rgba(244,162,97,0.08);
+      border-color: rgba(244,162,97,0.25);
+    }
+    .symptom-check input[type="checkbox"] {
+      accent-color: #f4a261;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+    .symptom-check label {
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #c9d9e8;
+      margin: 0;
+      user-select: none;
+    }
+    .symptom-check.checked {
+      background: rgba(244,162,97,0.12);
+      border-color: rgba(244,162,97,0.4);
+    }
+    .btn-predict {
+      background: linear-gradient(135deg, #f4a261, #e76f51);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      border-radius: 50px;
+      padding: 0.85rem 2.5rem;
+      width: 100%;
+      margin-top: 1.8rem;
+      transition: box-shadow 0.3s, transform 0.2s;
+    }
+    .btn-predict:hover {
+      box-shadow: 0 0 24px rgba(244,162,97,0.7);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
+    /* ── Results ── */
+    .result-section { margin-top: 2.5rem; }
+    .result-card-inner {
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .result-header {
+      background: linear-gradient(135deg, rgba(42,157,143,0.2), rgba(244,162,97,0.1));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .result-header .ai-badge {
+      background: rgba(42,157,143,0.25);
+      color: #2a9d8f;
+      border: 1px solid rgba(42,157,143,0.35);
+      border-radius: 50px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 2px 10px;
+    }
+    .model-result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+    .model-result-row:last-child { border-bottom: none; }
+    .model-result-row:hover { background: rgba(255,255,255,0.03); }
+    .model-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #c9d9e8;
+    }
+    .model-pred {
+      background: rgba(233,196,106,0.15);
+      color: #e9c46a;
+      border: 1px solid rgba(233,196,106,0.3);
+      border-radius: 50px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 14px;
+    }
+
+    /* ── Final prediction ── */
+    .final-pred {
+      margin-top: 1.5rem;
+      text-align: center;
+      padding: 1.8rem 1.5rem;
+      border-radius: 16px;
+      background: rgba(42,157,143,0.1);
+      border: 1px solid rgba(42,157,143,0.3);
+    }
+    .final-pred-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #2a9d8f;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .final-pred-disease {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #2a9d8f;
+    }
+
+    /* ── Feature tiles ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.2rem;
+      margin-top: 2rem;
+    }
+    .feature-tile {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .feature-tile:hover {
+      transform: translateY(-5px);
+      border-color: rgba(244,162,97,0.35);
+    }
+    .feature-tile .icon { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .feature-tile h5 {
+      font-weight: 700;
+      color: #e8f0f7;
+      margin-bottom: 0.4rem;
+      font-size: 1rem;
+    }
+    .feature-tile p {
+      font-size: 0.82rem;
+      color: #7a9bb8;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* ── About ── */
+    .about-text {
+      color: #8fadc8;
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+    .about-text strong { color: #e9c46a; }
+
+    /* ── Models section ── */
+    .model-cards-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .model-info-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 1.5rem 1.2rem;
+      text-align: center;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+    .model-info-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(42,157,143,0.4);
+    }
+    .model-info-card .m-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .model-info-card h6 { font-weight: 700; color: #e8f0f7; margin-bottom: 0.3rem; }
+    .model-info-card p { font-size: 0.78rem; color: #7a9bb8; margin: 0; line-height: 1.5; }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 1.2rem;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: border-color 0.25s;
+    }
+    .contact-item:hover { border-color: rgba(244,162,97,0.3); }
+    .contact-item .c-icon { font-size: 1.5rem; flex-shrink: 0; }
+    .contact-item .c-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #7a9bb8;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 0.15rem;
+    }
+    .contact-item .c-value {
+      font-size: 0.9rem;
+      color: #c9d9e8;
+      font-weight: 500;
+    }
+    .contact-item a {
+      color: #f4a261;
+      text-decoration: none;
+    }
+    .contact-item a:hover { text-decoration: underline; }
+
+    .social-links {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #c9d9e8;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .social-link:hover {
+      background: rgba(244,162,97,0.1);
+      border-color: rgba(244,162,97,0.3);
+      color: #f4a261;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.8rem 1rem;
+      color: #4a6278;
+      font-size: 0.82rem;
+      margin-top: 3rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ── Scroll anchor offset ── */
+    section[id] { scroll-margin-top: 80px; }
+  </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="#home">🐄 CattleHealth</a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-3">
+        <li class="nav-item"><a class="nav-link active" href="#home">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#models">Models</a></li>
+        <li class="nav-item"><a class="nav-link" href="/image-detection">Image Detection</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container" style="max-width: 960px;">
+
+  <!-- ═══ Hero ═══ -->
+  <section id="home" class="hero">
+    <div class="hero-badge">AI + Machine Learning</div>
+    <h1>Cattle Disease Prediction Using AI &amp; ML</h1>
+    <p>
+      Predict cattle diseases accurately based on symptoms using powerful
+      machine learning models — or upload an image for AI-powered visual detection.
+    </p>
+    <div class="hero-actions">
+      <a href="#prediction" class="btn btn-hero btn-hero-primary">🔬 Predict by Symptoms</a>
+      <a href="/image-detection" class="btn btn-hero btn-hero-outline">📸 Image Detection</a>
+    </div>
+  </section>
+
+  <!-- ═══ Features ═══ -->
+  <div class="features-grid">
+    <div class="feature-tile">
+      <div class="icon">🧠</div>
+      <h5>Multi-Model Voting</h5>
+      <p>3 ML classifiers cross-validate each prediction for higher accuracy</p>
+    </div>
+    <div class="feature-tile">
+      <div class="icon">📸</div>
+      <h5>Image Detection</h5>
+      <p>Upload cattle photos for visual disease classification powered by CNN</p>
+    </div>
+    <div class="feature-tile">
+      <div class="icon">⚡</div>
+      <h5>Instant Results</h5>
+      <p>Real-time predictions delivered in under a second</p>
+    </div>
+    <div class="feature-tile">
+      <div class="icon">🌾</div>
+      <h5>Built for Farmers</h5>
+      <p>Simple, accessible interface designed for rural environments</p>
+    </div>
+  </div>
+
+  <!-- ═══ Prediction Form ═══ -->
+  <section id="prediction">
+    <div class="text-center mb-4">
+      <span class="section-label">Symptom Analysis</span>
+      <h2 class="section-title">Predict Disease</h2>
+      <p class="section-sub mx-auto">Select the symptoms your cattle is exhibiting. Our AI ensemble will analyze and predict the most likely disease.</p>
+    </div>
+
+    <div class="glass-card form-card">
+      <form method="POST" novalidate>
+        <p style="font-size:0.82rem; color:#7a9bb8; margin-bottom:1.2rem;">
+          ✅ Select one or more symptoms below:
+        </p>
+        <div class="symptom-grid">
+          {% for symp in symptoms_list %}
+          <div class="symptom-check" onclick="this.querySelector('input').click()">
+            <input type="checkbox" name="symptoms" value="{{ symp }}" id="s_{{ symp }}"
+                   onchange="this.closest('.symptom-check').classList.toggle('checked', this.checked)">
+            <label for="s_{{ symp }}">{{ symp.replace('_', ' ').title() }}</label>
+          </div>
+          {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-predict">🔬 Get Prediction</button>
+      </form>
+
+      <!-- Results -->
+      {% if results %}
+      <div class="result-section">
+        <div class="result-card-inner glass-card">
+          <div class="result-header">
+            <span>🩺 Prediction Results</span>
+            <span class="ai-badge">AI Powered</span>
+          </div>
+          {% for model, prediction in results.items() %}
+          <div class="model-result-row">
+            <span class="model-name">{{ model }}</span>
+            <span class="model-pred">{{ prediction }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if final_prediction %}
+      <div class="final-pred">
+        <div class="final-pred-label">Consensus Diagnosis</div>
+        <div class="final-pred-disease">{{ final_prediction }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- ═══ About ═══ -->
+  <section id="about">
+    <span class="section-label">About</span>
+    <h2 class="section-title">About This Project</h2>
+    <div class="glass-card p-4 mt-3">
+      <p class="about-text">
+        This project leverages <strong>machine learning</strong> to assist farmers and
+        veterinary professionals in the <strong>early detection and diagnosis</strong> of
+        common cattle diseases based on reported symptoms.
+      </p>
+      <p class="about-text">
+        The application combines powerful classifiers —
+        <strong>Random Forest</strong>, <strong>Naive Bayes</strong>, and
+        <strong>Decision Tree</strong> — to analyze multiple symptoms selected by the user.
+        A <strong>consensus voting</strong> mechanism ensures the most reliable prediction
+        when two or more models agree.
+      </p>
+      <p class="about-text">
+        Additionally, a <strong>CNN-based image detection</strong> module enables visual
+        analysis of cattle photographs for signs of disease, making the platform a
+        comprehensive diagnostic tool.
+      </p>
+      <p class="about-text mb-0">
+        This tool can be invaluable in <strong>rural and resource-constrained environments</strong>
+        where quick access to expert veterinary services may be limited. It empowers
+        users by offering probable diagnoses that can guide further professional examination.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ Models ═══ -->
+  <section id="models">
+    <span class="section-label">Technology</span>
+    <h2 class="section-title">Models Used</h2>
+    <p class="section-sub">Our system employs multiple classification algorithms for maximum prediction reliability.</p>
+    <div class="model-cards-row">
+      <div class="model-info-card">
+        <div class="m-icon">🌲</div>
+        <h6>Random Forest</h6>
+        <p>Ensemble of 100 decision trees for robust, high-accuracy classification</p>
+      </div>
+      <div class="model-info-card">
+        <div class="m-icon">📊</div>
+        <h6>Naive Bayes</h6>
+        <p>Probabilistic classifier based on Bayes' theorem with strong independence assumptions</p>
+      </div>
+      <div class="model-info-card">
+        <div class="m-icon">🌿</div>
+        <h6>Decision Tree</h6>
+        <p>Tree-structured model for interpretable, rule-based decision making</p>
+      </div>
+      <div class="model-info-card">
+        <div class="m-icon">🧠</div>
+        <h6>MobileNetV2 CNN</h6>
+        <p>Deep learning model for image-based visual disease detection</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Contact ═══ -->
+  <section id="contact">
+    <span class="section-label">Get in Touch</span>
+    <h2 class="section-title">Contact Us</h2>
+    <p class="section-sub">For questions, support, or collaboration inquiries, please reach out.</p>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <span class="c-icon">📧</span>
+        <div>
+          <div class="c-label">Email</div>
+          <div class="c-value"><a href="mailto:amritrao54@gmail.com">amritrao54@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="c-icon">📞</span>
+        <div>
+          <div class="c-label">Phone</div>
+          <div class="c-value">+91 8858308321</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <span class="c-icon">📍</span>
+        <div>
+          <div class="c-label">Office Address</div>
+          <div class="c-value">123 Gaytripuram, Deoria, Uttar Pradesh, India</div>
+        </div>
+      </div>
+    </div>
+    <div class="social-links">
+      <a href="https://twitter.com/cattlehealth" target="_blank" class="social-link">🐦 Twitter</a>
+      <a href="https://facebook.com/cattlehealth" target="_blank" class="social-link">📘 Facebook</a>
+      <a href="https://linkedin.com/company/cattlehealth" target="_blank" class="social-link">💼 LinkedIn</a>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  &copy; 2025 CattleHealth. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Prevent double-toggle when clicking the checkbox directly inside .symptom-check
+  document.querySelectorAll('.symptom-check input').forEach(cb => {
+    cb.addEventListener('click', e => e.stopPropagation());
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+[
+  {"if": ["fever", "coughing"], "then": "Bovine Respiratory Disease"},
+  {"if": ["swollen_udder", "abnormal_milk"], "then": "Mastitis"},
+  {"if": ["lameness", "swollen_foot"], "then": "Foot Rot"},
+  {"if": ["fever", "drooling", "blisters"], "then": "Foot and Mouth Disease"},
+  {"if": ["sudden_death", "swollen_muscles", "high_fever"], "then": "Blackleg"},
+  {"if": ["chronic_cough", "weight_loss", "swollen_lymph_nodes"], "then": "Tuberculosis"},
+  {"if": ["redness", "painful_udder", "loss_of_appetite"], "then": "Mastitis"},
+  {"if": ["weight_loss", "depression", "low_milk"], "then": "Johne's Disease"},
+  {"if": ["fever", "cough", "rapid_breathing"], "then": "Pneumonia"},
+  {"if": ["abdominal_pain", "loss_of_appetite"], "then": "Bloat"},
+  {"if": ["blisters", "lameness"], "then": "Foot and Mouth Disease"}
+]

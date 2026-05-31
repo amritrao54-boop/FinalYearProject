@@ -1,0 +1,11 @@
+[
+  {"location": "North Farm", "likely_diseases": ["Foot and Mouth", "Bloat"]},
+  {"location": "East Ranch", "likely_diseases": ["Mastitis"]},
+  {"location": "Gujarat", "likely_diseases": ["Tuberculosis", "Foot Rot"]},
+  {"location": "Karnataka", "likely_diseases": ["Bloat", "Pneumonia"]},
+  {"location": "Punjab", "likely_diseases": ["Johne's Disease", "Blackleg"]},
+  {"location": "Uttar Pradesh", "likely_diseases": ["Blackleg", "Foot Rot"]},
+  {"location": "Tripura", "likely_diseases": ["Theileriosis"]},
+  {"location": "West Bengal", "likely_diseases": ["Mastitis", "Tuberculosis"]},
+  {"location": "Rajasthan", "likely_diseases": ["Foot and Mouth", "Bovine Respiratory Disease"]}
+]
