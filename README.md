@@ -65,6 +65,3 @@ The system is specifically optimized for:
 - **Deep Learning**: TensorFlow, Keras (MobileNetV2)
 - **Data Handling**: Pandas, NumPy
 - **Image Processing**: PIL (Pillow)
-
----
-*Created with the assistance of Antigravity AI.*
