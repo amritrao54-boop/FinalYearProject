@@ -6,3 +6,15 @@ scikit-learn
 Pillow
 Werkzeug
 kagglehub
+langchain
+langgraph
+langchain-google-genai
+fastapi
+uvicorn
+pydantic
+python-multipart
+faiss-cpu
+sentence-transformers
+langchain-community
+sqlalchemy
+opencv-python
